@@ -71,6 +71,20 @@ resource "aws_route" "private-db" {
   nat_gateway_id = aws_nat_gateway.ngw.id
 }
 
+resource "aws_route_table_association" "apps" {
+  count = length(module.subnets["apps"].out[*].id)
+  subnet_id      = element(module.subnets["apps"].out[*].id, count.index )
+  route_table_id = aws_route_table.route-tables["apps"].id
+}
+
+resource "aws_route_table_association" "db" {
+  count = length(module.subnets["db"].out[*].id)
+  subnet_id      = element(module.subnets["db"].out[*].id, count.index )
+  route_table_id = aws_route_table.route-tables["db"].id
+}
+
+
+
 output "out" {
   value = module.subnets["public"].out[*].id
 }
