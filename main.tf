@@ -83,12 +83,18 @@ resource "aws_route_table_association" "db" {
   route_table_id = aws_route_table.route-tables["db"].id
 }
 
-resource "aws_vpc_peering_connection" "foo" {
+resource "aws_vpc_peering_connection" "peering-to-default-vpc" {
   peer_vpc_id   = aws_vpc.main.id
   vpc_id        = var.default_vpc_id
   auto_accept = true
 }
 
+//resource "aws_route" "peering" {
+//  count = length(aws_route_table.route-tables["*"].id)
+//  route_table_id              = element(aws_route_table.route-tables["*"].id, count.index)
+//  destination_cidr_block = var.default_vpc_cidr
+//  vpc_peering_connection_id = aws_vpc_peering_connection.peering-to-default-vpc.id
+//}
 
 
 output "out" {
