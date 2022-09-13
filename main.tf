@@ -46,3 +46,7 @@ resource "aws_route_table_association" "public" {
   subnet_id      = element(module.subnets["public"].out[*].id, count.index )
     route_table_id = aws_route_table.route-tables["public"].id
 }
+
+output " out" {
+  value = module.subnets["public"].out[*].id
+}
