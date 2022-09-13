@@ -16,7 +16,7 @@ module "subnets" {
   igw = try(each.value["igw"], false)
   env = var.env
   //igw_id = aws_internet_gateway.igw.id
-  route_tables = aws_route_table.route-tables.*.id
+  //route_tables = aws_route_table.route-tables.*.id
 }
 
 resource "aws_internet_gateway" "igw" {
