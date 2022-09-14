@@ -39,64 +39,64 @@ resource "aws_nat_gateway" "ngw" {
   }
 }
 
-resource "aws_route_table" "route-tables" {
-  for_each = var.subnets
-  vpc_id = aws_vpc.main.id
-  tags = {
-    Name = "${each.value["name"]}-rt"
-
-  }
-}
-
-resource "aws_route" "public" {
-  route_table_id              = aws_route_table.route-tables["public"].id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id      = aws_internet_gateway.igw.id
-}
-resource "aws_route_table_association" "public" {
-  count = length(module.subnets["public"].out[*].id)
-  subnet_id      = element(module.subnets["public"].out[*].id, count.index )
-    route_table_id = aws_route_table.route-tables["public"].id
-}
-
-resource "aws_route" "private-apps" {
-  route_table_id              = aws_route_table.route-tables["apps"].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.ngw.id
-}
-
-resource "aws_route" "private-db" {
-  route_table_id              = aws_route_table.route-tables["db"].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.ngw.id
-}
-
-resource "aws_route_table_association" "apps" {
-  count = length(module.subnets["apps"].out[*].id)
-  subnet_id      = element(module.subnets["apps"].out[*].id, count.index )
-  route_table_id = aws_route_table.route-tables["apps"].id
-}
-
-resource "aws_route_table_association" "db" {
-  count = length(module.subnets["db"].out[*].id)
-  subnet_id      = element(module.subnets["db"].out[*].id, count.index )
-  route_table_id = aws_route_table.route-tables["db"].id
-}
-
-resource "aws_vpc_peering_connection" "peering-to-default-vpc" {
-  peer_vpc_id   = aws_vpc.main.id
-  vpc_id        = var.default_vpc_id
-  auto_accept = true
-}
-
-//resource "aws_route" "peering" {
-//  count = length(aws_route_table.route-tables["*"].id)
-//  route_table_id              = element(aws_route_table.route-tables["*"].id, count.index)
-//  destination_cidr_block = var.default_vpc_cidr
-//  vpc_peering_connection_id = aws_vpc_peering_connection.peering-to-default-vpc.id
+//resource "aws_route_table" "route-tables" {
+//  for_each = var.subnets
+//  vpc_id = aws_vpc.main.id
+//  tags = {
+//    Name = "${each.value["name"]}-rt"
+//
+//  }
 //}
-
-
-output "out" {
-  value = module.subnets["public"].out[*].id
-}
+//
+//resource "aws_route" "public" {
+//  route_table_id              = aws_route_table.route-tables["public"].id
+//  destination_cidr_block = "0.0.0.0/0"
+//  gateway_id      = aws_internet_gateway.igw.id
+//}
+//resource "aws_route_table_association" "public" {
+//  count = length(module.subnets["public"].out[*].id)
+//  subnet_id      = element(module.subnets["public"].out[*].id, count.index )
+//    route_table_id = aws_route_table.route-tables["public"].id
+//}
+//
+//resource "aws_route" "private-apps" {
+//  route_table_id              = aws_route_table.route-tables["apps"].id
+//  destination_cidr_block = "0.0.0.0/0"
+//  nat_gateway_id = aws_nat_gateway.ngw.id
+//}
+//
+//resource "aws_route" "private-db" {
+//  route_table_id              = aws_route_table.route-tables["db"].id
+//  destination_cidr_block = "0.0.0.0/0"
+//  nat_gateway_id = aws_nat_gateway.ngw.id
+//}
+//
+//resource "aws_route_table_association" "apps" {
+//  count = length(module.subnets["apps"].out[*].id)
+//  subnet_id      = element(module.subnets["apps"].out[*].id, count.index )
+//  route_table_id = aws_route_table.route-tables["apps"].id
+//}
+//
+//resource "aws_route_table_association" "db" {
+//  count = length(module.subnets["db"].out[*].id)
+//  subnet_id      = element(module.subnets["db"].out[*].id, count.index )
+//  route_table_id = aws_route_table.route-tables["db"].id
+//}
+//
+//resource "aws_vpc_peering_connection" "peering-to-default-vpc" {
+//  peer_vpc_id   = aws_vpc.main.id
+//  vpc_id        = var.default_vpc_id
+//  auto_accept = true
+//}
+//
+////resource "aws_route" "peering" {
+////  count = length(aws_route_table.route-tables["*"].id)
+////  route_table_id              = element(aws_route_table.route-tables["*"].id, count.index)
+////  destination_cidr_block = var.default_vpc_cidr
+////  vpc_peering_connection_id = aws_vpc_peering_connection.peering-to-default-vpc.id
+////}
+//
+//
+//output "out" {
+//  value = module.subnets["public"].out[*].id
+//}
