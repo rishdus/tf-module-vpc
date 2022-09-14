@@ -12,3 +12,9 @@ resource "aws_subnet" "main" {
 output "out" {
   value = aws_subnet.main
 }
+
+output "subnet_ids" {
+  value = {
+  for k, v in aws_subnet.main : k => v.id
+  }
+}
