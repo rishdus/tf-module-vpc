@@ -24,6 +24,7 @@ module "routes" {
   source = "./routes"
   vpc_id = aws_vpc.main.id
   name = each.value["name"]
+  subnet_ids = module.subnets
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -53,12 +54,7 @@ resource "aws_nat_gateway" "ngw" {
 //  destination_cidr_block = "0.0.0.0/0"
 //  gateway_id      = aws_internet_gateway.igw.id
 //}
-//resource "aws_route_table_association" "public" {
-//  count = length(module.subnets["public"].out[*].id)
-//  subnet_id      = element(module.subnets["public"].out[*].id, count.index )
-//    route_table_id = aws_route_table.route-tables["public"].id
-//}
-//
+
 //resource "aws_route" "private-apps" {
 //  route_table_id              = aws_route_table.route-tables["apps"].id
 //  destination_cidr_block = "0.0.0.0/0"
